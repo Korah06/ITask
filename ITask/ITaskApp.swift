@@ -12,8 +12,9 @@ import SwiftData
 struct ITaskApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            TaskModel.self
         ])
+        //Para testing crear uno a parte que solo almacene en memoria
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {

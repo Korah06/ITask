@@ -9,53 +9,42 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @Environment(\.modelContext) private var context
+    @Query private var tasks: [TaskModel]
+    @State private var showAdd = false
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
+        NavigationStack{
+            List{
+                ForEach(tasks){ task in
+                    TaskRow(task: task)
+                }
+                .onDelete{ index in
+                    if let index = index.first {
+                        context.delete(tasks[index])
+                    }
+                }
+            }
+            .navigationTitle("Tasks")
+            .toolbar{
+                ToolbarItem(placement: .primaryAction){
+                    Button{
+                        showAdd.toggle()
                     } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                        Image(systemName: "plus")
                     }
                 }
             }
-        } detail: {
-            Text("Select an item")
+        }.sheet(isPresented: $showAdd){
+            NewTaskView()
         }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
+        //Esto es lo mismo que el sheet pero con este se ocupa toda la pantalla
+//        .fullScreenCover(isPresented: $showAdd){
+//            NewTaskView()
+//        }
     }
 }
 
-#Preview {
+#Preview(traits: .sampleData) {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
