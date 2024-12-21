@@ -49,7 +49,9 @@ struct HomeView: View {
                 }
                 .onDelete{ index in
                     if let index = index.first {
-                        context.delete(tasks[index])
+                        let tasks = tasks
+                        let task = tasks[index]
+                        context.delete(task)
                     }
                 }
             }

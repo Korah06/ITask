@@ -46,28 +46,50 @@ struct NewTaskView: View {
                     Text("Estado de la tarea")
                 }
             }.textFieldStyle(.roundedBorder).navigationTitle(isEdit ? "Editar tarea" : "Nueva tarea").toolbar{
-                ToolbarItem(placement: .confirmationAction){
-                    Button{
-                        if isEdit, let task = task{
-                            task.name = name
-                            task.taskDescription = description
-                            task.date = date
-                            task.status = status
+                
+                if !isEdit {
+                    ToolbarItem(placement: .confirmationAction){
+                        Button{
+                            if isEdit, let task = task{
+                                task.name = name
+                                task.taskDescription = description
+                                task.date = date
+                                task.status = status
+                                dismiss()
+                                return
+                            }
+                            let newTask = TaskModel(id: UUID(), name: name, description: description, date: date, status: status)
+                            context.insert(newTask)
                             dismiss()
-                            return
+                        } label: {
+                            Text(isEdit ? "Editar" :"Crear")
                         }
-                        let newTask = TaskModel(id: UUID(), name: name, description: description, date: date, status: status)
-                        context.insert(newTask)
-                        dismiss()
-                    } label: {
-                        Text(isEdit ? "Editar" :"Crear")
+                    }
+                    ToolbarItem(placement: .cancellationAction){
+                        Button{
+                            dismiss()
+                        }label: {
+                            Text("Cancelar")
+                        }
                     }
                 }
-                ToolbarItem(placement: .cancellationAction){
-                    Button{
-                        dismiss()
-                    }label: {
-                        Text("Cancelar")
+                if isEdit {
+                    ToolbarItem(placement: .confirmationAction){
+                        Button{
+                            if isEdit, let task = task{
+                                task.name = name
+                                task.taskDescription = description
+                                task.date = date
+                                task.status = status
+                                dismiss()
+                                return
+                            }
+                            let newTask = TaskModel(id: UUID(), name: name, description: description, date: date, status: status)
+                            context.insert(newTask)
+                            dismiss()
+                        } label: {
+                            Text(isEdit ? "Editar" :"Crear")
+                        }
                     }
                 }
             }
@@ -83,5 +105,6 @@ struct NewTaskView: View {
 }
 
 #Preview(traits: .sampleData) {
-    NewTaskView(task: nil)
+    NewTaskView(task: TaskModel(id: UUID(), name: "Example", description: "Example", date: Date(), status: TaskStatus.done))
+//    NewTaskView(task: nil)
 }
