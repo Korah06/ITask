@@ -18,8 +18,8 @@ struct SampleData: PreviewModifier {
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
         
-        let task1 = TaskModel(id: UUID(), name: "Tarea 1", description: "Descripcion de la tarea 1", date: .now, status: .pending)
-        let task2 = TaskModel(id: UUID(), name: "Tarea 2", description: "Descripcion de la tarea 2", date: .now, status: .done)
+        let task1 = TaskModel(id: UUID(), name: "Programar Swift", description: "Dedicarse al nuevo proyector de Swift", date: .now, status: .pending)
+        let task2 = TaskModel(id: UUID(), name: "Salir a pasear con el perro", description: "Sacar al perro a pasear por la tarde con mi amigo Jose Luis", date: .now, status: .done)
         
         container.mainContext.insert(task1)
         container.mainContext.insert(task2)

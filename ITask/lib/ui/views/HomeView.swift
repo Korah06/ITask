@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View {
+struct HomeView: View {
     @Environment(\.modelContext) private var context
     @Query private var tasks: [TaskModel]
     @State private var showAdd = false
@@ -23,7 +23,7 @@ struct ContentView: View {
                 } else{
                     main
                 }
-            }.navigationTitle("Tasks")
+            }.navigationTitle("Tareas")
                 .toolbar{
                     ToolbarItem(placement: .primaryAction){
                         Button{
@@ -35,7 +35,7 @@ struct ContentView: View {
                 }
             
         }.sheet(isPresented: $showAdd){
-            NewTaskView()
+            NewTaskView(task:nil)
         }
         
     }
@@ -43,7 +43,9 @@ struct ContentView: View {
     var main: some View {
             List{
                 ForEach(tasks){ task in
-                    TaskRow(task: task)
+                    NavigationLink(destination: NewTaskView(task: task)){
+                        TaskRow(task: task)
+                    }
                 }
                 .onDelete{ index in
                     if let index = index.first {
@@ -60,5 +62,5 @@ struct ContentView: View {
 }
 
 #Preview(traits: .sampleData) {
-    ContentView()
+    HomeView()
 }

@@ -11,11 +11,14 @@ struct NewTaskView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     
+    let task: TaskModel?
+    
     @State var name: String = ""
     @State var description: String = ""
     @State var date: Date = Date()
     @State var status: TaskStatus = .pending
     var body: some View {
+        let isEdit = task != nil
         //Form for create a row in TaskModel
         NavigationStack{
             Form {
@@ -42,14 +45,22 @@ struct NewTaskView: View {
                 } label: {
                     Text("Estado de la tarea")
                 }
-            }.textFieldStyle(.roundedBorder).navigationTitle("Nueva tarea").toolbar{
+            }.textFieldStyle(.roundedBorder).navigationTitle(isEdit ? "Editar tarea" : "Nueva tarea").toolbar{
                 ToolbarItem(placement: .confirmationAction){
                     Button{
+                        if isEdit, let task = task{
+                            task.name = name
+                            task.taskDescription = description
+                            task.date = date
+                            task.status = status
+                            dismiss()
+                            return
+                        }
                         let newTask = TaskModel(id: UUID(), name: name, description: description, date: date, status: status)
                         context.insert(newTask)
                         dismiss()
                     } label: {
-                        Text("Crear")
+                        Text(isEdit ? "Editar" :"Crear")
                     }
                 }
                 ToolbarItem(placement: .cancellationAction){
@@ -60,10 +71,17 @@ struct NewTaskView: View {
                     }
                 }
             }
+        }.onAppear{
+            if let task = task {
+                name = task.name
+                description = task.taskDescription
+                date = task.date
+                status = task.status
+            }
         }
     }
 }
 
 #Preview(traits: .sampleData) {
-    NewTaskView()
+    NewTaskView(task: nil)
 }

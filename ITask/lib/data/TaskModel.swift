@@ -9,9 +9,9 @@ import Foundation
 import SwiftData
 
 enum TaskStatus: String, Codable,Identifiable,CaseIterable{
-    case pending = "Pending"
-    case inProgress = "In Progress"
-    case done = "Done"
+    case pending = "Pendiente"
+    case inProgress = "En Progreso"
+    case done = "Hecho"
     
     var id: Self { self }
 }
